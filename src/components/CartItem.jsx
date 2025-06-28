@@ -54,22 +54,42 @@ function DecrementCart(){
     
   return (
     <>
-    <div className="flex flex-col justify-center items-center border-1 m-1 w-72 p-2 text-center mt-9 rounded-2xl " key={Product.id}>
-        <img className="size-60 mt-2" src={Product.image} />
-        <div>
-            <h3 className="mt-2 text-lg"> {Product.title}</h3>
-            <h5 className="mt-5 text-lg ">{Product.price} </h5>
-        </div>
-        {count !== 0 ? <>
-            <button onClick={AddingToCart}>Increment</button>
-            <p>{count}</p>
-            <button onClick={DecrementCart}>Decrement</button>
-        </> :
-        <div className="mt-2 border-2 rounded-xl w-max p-1" onClick={AddingToCart}>
-            <button> Add to cart</button>
-        </div>
-}
+  <div
+  className="flex flex-col justify-center items-center border border-gray-300 shadow-md m-2 w-72 p-4 text-center mt-9 rounded-2xl bg-white hover:shadow-lg transition duration-300"
+  key={Product.id}
+>
+  <img className="w-60 h-60 object-contain mt-2" src={Product.image} alt={Product.title} />
+
+  <div className="mt-3">
+    <h3 className="text-lg font-semibold text-gray-800">{Product.title}</h3>
+    <h5 className="mt-2 text-lg text-green-600 font-medium">₹ {Product.price}</h5>
+  </div>
+
+  {count !== 0 ? (
+    <div className="flex items-center gap-4 mt-4">
+      <button
+        onClick={AddingToCart}
+        className="bg-blue-500 text-white px-3 py-1 rounded-full hover:bg-green-600 transition"
+      >
+        +
+      </button>
+      <p className="text-lg font-bold">{count}</p>
+      <button
+        onClick={DecrementCart}
+        className="bg-blue-500 text-white px-3 py-1 rounded-full hover:bg-red-600 transition"
+      >
+        -
+      </button>
     </div>
+  ) : (
+    <div
+      className="mt-4 border-2 border-blue-500 rounded-xl px-4 py-2 cursor-pointer hover:bg-blue-500 hover:text-white transition"
+      onClick={AddingToCart}
+    >
+      <button>Add to cart</button>
+    </div>
+  )}
+</div>
     </>
   )
 }

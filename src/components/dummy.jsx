@@ -22,9 +22,11 @@ function onDecrementComp(product1,product2){
 function Dummy() {
   
   const [searchTerm,setSearchTerm] = useState("");
-  const [productsArr,setProductsArr] = useState(null);
+  const [productsArr,setProductsArr] = useState([]);
   const [sortDir,setSortDir] = useState(0);
   const [currCategory,setCurrCategory] = useState("All categories");
+  const [selectedCategory, setSelectedCategory] = useState("All categories");
+  const [allProducts, setAllProducts] = useState([]);
   
   /**
    * I create a state varible which tells us which sorting to be happend
@@ -42,8 +44,8 @@ function Dummy() {
     async function fn() {
       const response = await fetch("https://fakestoreapi.in/api/products");
       const productsData = await response.json();
-      //console.log(productsData.products)
       setProductsArr(productsData.products);
+      setAllProducts(productsData.products);
     }
     fn()
   }
@@ -61,6 +63,15 @@ function Dummy() {
   useEffect(fetchProducts,[]);
 
   useEffect(fetchCategories,[]);
+
+  useEffect(()=>{
+    if(selectedCategory === "All"){
+      setProductsArr(allProducts);
+      return;
+    }
+    const filteredProducts = allProducts.filter((product)=> product.category == selectedCategory);
+    setProductsArr(filteredProducts);
+  }, [selectedCategory])
 
 // searching is all about hiding the unwanted elements
 let filteredArr = productsArr;// copy os state variable
@@ -106,9 +117,9 @@ if(sortDir!==0){
        <div className="bg-gray-500 h-10">
         {currCategory=="All categories"?"":
         <div className="flex justify-end items-center">
-          <button className="border-1 mt-2 ml-4 pr-1 pl-1 rounded-lg">All Categories</button>
+          <button className="border-1 mt-2 ml-4 pr-1 pl-1 rounded-lg" onClick={()=> setSelectedCategory("All")}>All Categories</button>
             {currCategory.map((category)=>{
-             return <button className="border-1 mt-2 ml-4 pr-1 pl-1 rounded-lg">{category}</button>
+             return <button className="border-1 mt-2 ml-4 pr-1 pl-1 rounded-lg" onClick={()=>setSelectedCategory(category)}>{category}</button>
             })}
           </div>}
        </div>

@@ -21,12 +21,13 @@ function onDcrementComp(product1, product2) {
 }
 
 function Home(props) {
-    const {SetCartProp,cart} = props
-    const [productsArr, setProductsArr] = useState(null);
-    const [searchTerm, setSearchTerm] = useState("");
-    const [sortDir, setSortDir] = useState(0);
-    const [currCategory, setCurrCategory] = useState("All categories");
-    const [categoriesList, setCategoriesList] = useState([]);
+     const [searchTerm,setSearchTerm] = useState("");
+  const [productsArr,setProductsArr] = useState([]);
+  const [sortDir,setSortDir] = useState(0);
+  const [currCategory,setCurrCategory] = useState("All categories");
+  const [selectedCategory, setSelectedCategory] = useState("All categories");
+  const [allProducts, setAllProducts] = useState([]);
+  
     
 
     function fetchProducts() {
@@ -34,15 +35,17 @@ function Home(props) {
             const response = await fetch("https://fakestoreapi.in/api/products")
             const productsdata = await response.json()
             setProductsArr(productsdata.products);
+            setAllProducts(productsdata.products);
         }
         fn()
     }
 
     function fetchCategories() {
         async function fn() {
-            const response = await fetch("https://fakestoreapi.in/api/products/categories")
+            const response = await fetch("https://fakestoreapi.in/api/products/category")
             const categoriesData = await response.json()
-            setCategoriesList(categoriesData)
+            setCurrCategory(categoriesData.categories);
+
         }
         fn();
     }
@@ -50,7 +53,14 @@ function Home(props) {
     useEffect(fetchProducts, [])
     useEffect(fetchCategories, [])
 
-
+  useEffect(()=>{
+    if(selectedCategory === "All"){
+      setProductsArr(allProducts);
+      return;
+    }
+    const filteredProducts = allProducts.filter((product)=> product.category == selectedCategory);
+    setProductsArr(filteredProducts);
+  }, [selectedCategory])
 
     let filteredArr = productsArr
     if (searchTerm !== "") {
@@ -82,10 +92,19 @@ function AddingToCart(Products){
         <>
             <div className="w-full bg-blue">
                 <NavBar secrchItem={searchTerm} SearchTermSet={setSearchTerm} Sorting={setSortDir}/>
+                 <div className="bg-gray-500 h-10">
+        {currCategory=="All categories"?"":
+        <div className="flex justify-end items-center">
+          <button className="border-2 mt-2 ml-4 pr-1 pl-1 rounded-lg" onClick={()=> setSelectedCategory("All")}>All Categories</button>
+            {currCategory.map((category)=>{
+             return <button className="border-2 w-auto mt-2 ml-10 pr-2 pl-1 rounded-lg" onClick={()=>setSelectedCategory(category)}>{category}</button>
+            })}
+          </div>}
+       </div>
                 <main className="flex flex-wrap justify-center min-w-65 gap-4">
                     {filteredArr == null ? <h1> page is loading</h1> :
                         filteredSortedArr.map((products, id) => {
-                            return <CartItem Product = {products} id ={id} setCartProp={SetCartProp}/>
+                            return <CartItem Product = {products} id ={id}/>
                         })
                     }
                 </main>

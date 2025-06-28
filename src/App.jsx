@@ -21,8 +21,8 @@ function App() {
     <>
     <BrowserRouter>     
     <Routes>
-        <Route path="/" element={<Home SetCartProp={setcart} cart={cart}></Home>}></Route>
-        <Route path="/home" element={<Navigate to="/"></Navigate>}></Route>
+        <Route path="/" element={<Navigate to="/signInPage" />}></Route>
+        <Route path="/home" element={<Home SetCartProp={setcart} cart={cart}></Home>}></Route>
         <Route path="/product/:id" element={<productDetails/>}></Route>
         <Route path='/dummy' element= {<Dummy/>}> </Route>
          <Route path='/signInPage' element= {<SignInPage/>}> </Route>
